@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-	let username: string = req.query.username;
+	let username: string = req.query.username as string;
 	if(!username) {
 		res.status(400).send('No username provided!');
 		res.end();
