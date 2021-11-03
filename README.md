@@ -12,6 +12,7 @@ You can call https://maz-aoe4rank.vercel.app/api/rank?username=[username] (repla
 For a nightbot command, you can add $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query)) for a generic command.
 Example: To add the command: !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query))
 		 To call on it: !aoe4rank DeMusliM
+If you want to make a command for a specific player, you can replace $(query) with his username too, e.g. !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=DeMusliM)
 
 ## Building & Deployment
 
