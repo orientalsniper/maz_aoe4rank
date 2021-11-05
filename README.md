@@ -9,7 +9,9 @@ The AoE4 API operates on POST requests (since it was programmed for the search f
 
 You can call https://maz-aoe4rank.vercel.app/api/rank?username=[username] (replace [username] with a player name - make sure that it matches case and special chars exactly like it is in AoE4), it will print a message about the players rank, win-loss stats, and current streak.
 
-For a nightbot command, you can add $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query)) for a generic command.
+### Nightbot commands
+
+For a generic command: $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query)) 
 Example: To add the command: !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query))
 		 To call on it: !aoe4rank DeMusliM
 If you want to make a command for a specific player, you can replace $(query) with his username too, e.g. !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=DeMusliM)
