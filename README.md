@@ -11,10 +11,18 @@ You can call https://maz-aoe4rank.vercel.app/api/rank?username=[username] (repla
 
 ### Nightbot commands
 
-For a generic command: $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query)) 
-Example: To add the command: !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query))
-		 To call on it: !aoe4rank DeMusliM
-If you want to make a command for a specific player, you can replace $(query) with his username too, e.g. !commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=DeMusliM)
+For a generic command:
+```$(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query))```
+
+Example: To add the command: ```!commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query))```
+
+To call on it: ```!aoe4rank DeMusliM```
+		 
+If you want to make a command for a specific player, you can replace $(query) with his username too:
+
+```!commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=DeMusliM)```
+
+IMPORTANT: Player name has to match the name shown in AoE4 exactly, including case. The API does not support a search function (yet).
 
 ## Building & Deployment
 
