@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	let username: string = req.query.username as string;
 	let defaultUser: string = req.query.defaultuser as string;
-	if(!username && !defaultUser || (username.length <= 0 && defaultUser.length <= 0)) {
+	let profileID: string = req.query.profileid as string;
+	if((!username || username.length <= 0) && (!defaultUser || defaultUser.length <= 0) && (!profileID || profileID.length <= 0)) {
 		// Nightbot only seems to print the message when urlfetch returns status 200, otherwise I would use a 4xx status here
 		res.status(200).send('No username provided!');
 		res.end();
@@ -14,6 +15,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 		url += "&search=" + username;
 	} else if(defaultUser && defaultUser.length > 0) {
 		url += "&search=" + defaultUser;
+	} else if(profileID && profileID.length > 0) {
+		url += "&profile_id=" + profileID;
 	}
 	console.log(url);
 
