@@ -54,14 +54,25 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 			res.end();
 			return;
 		}
-		responseMessage = "Stats for " + player.name + ": \n";
+		responseMessage = player.name + ": \n";
+		let civNames = {
+			"holy_roman_empire": "HRE",
+			"abbasid_dynasty": "Abbasid",
+			"mongols": "Mongols",
+			"rus": "Rus",
+			"chinese": "China",
+			"delhi_sultanate": "Delhi",
+			"english": "English",
+			"french": "French"
+		};
 		let civs = player.modes.qm_1v1.civilizations;
 		civs.forEach(civ => {
 			console.log(civ);
 			let civString = civ.civilization as string;
-			civString = civString.replace(/_/g, " ");
-			civString = civString.slice(0,1).toUpperCase() + civString.slice(1);
-			responseMessage += civString + ": Winrate: " + civ.win_rate.toFixed() + "%, Pickrate: " + civ.pick_rate.toFixed() + "%, from " + civ.games_count + " games; \n";
+			civString = civNames[civString] || civString;
+/*			civString = civString.replace(/_/g, " ");
+			civString = civString.slice(0,1).toUpperCase() + civString.slice(1);*/
+			responseMessage += civString + ": Won: " + civ.win_rate.toFixed() + "%, Picked: " + civ.pick_rate.toFixed() + "%, " + civ.games_count + " games; \n";
 		});
 		res.status(200).send(responseMessage);
 		res.end();
