@@ -200,7 +200,7 @@ function parseResult(result, mode, username, profileID) {
 			winPercent,
 			streak: player.streak,
 			wins: player.wins_count,
-			losses: player.games_count - player.wins_count
+			losses: player.losses_count
 		};
 	}
 	return null;
