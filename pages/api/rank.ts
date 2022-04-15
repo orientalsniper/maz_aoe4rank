@@ -239,6 +239,7 @@ function parseResult(result, mode, username, profileID, ranked) {
 		}
 		return {
 			name,
+			site_url: player.site_url,
 			rank: player.rank,
 			rank_level: leagueString,
 			rating: player.rating,
