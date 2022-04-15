@@ -88,7 +88,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	}
 	// if we still don't have a result, display an error message
 	if(!hasResult) {
-		res.status(200).send("Could not find player " + username + ". Make sure you typed the name correctly and they have completed at least 10 matches.");
+		res.status(200).send("Could not find player " + username + ". Make sure you typed the name correctly and they have completed at least 5 matches. We can only fetch the top 3000 players atm.");
 		res.end();
 	}
 }
