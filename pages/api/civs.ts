@@ -54,7 +54,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 			res.end();
 			return;
 		}
-		responseMessage = player.name + ": \n";
+		responseMessage = player.name + ": ";
 		let civNames = {
 			"holy_roman_empire": "HRE",
 			"abbasid_dynasty": "Abbasid",
@@ -70,9 +70,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 			console.log(civ);
 			let civString = civ.civilization as string;
 			civString = civNames[civString] || civString;
-/*			civString = civString.replace(/_/g, " ");
-			civString = civString.slice(0,1).toUpperCase() + civString.slice(1);*/
-			responseMessage += civString + ": Won: " + civ.win_rate.toFixed() + "%, Picked: " + civ.pick_rate.toFixed() + "%, " + civ.games_count + " games; \n";
+			responseMessage += civString + ": Won: " + civ.win_rate.toFixed() + "%, Picked: " + civ.pick_rate.toFixed() + "%, " + civ.games_count + " games; ";
 		});
 		res.status(200).send(responseMessage);
 		res.end();

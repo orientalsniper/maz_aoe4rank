@@ -4,6 +4,9 @@ const OFFICIAL = "official";
 const AOEIV = "aoeiv";
 const AOE4WORLD = "aoe4world";
 
+const RANKED = "ranked";
+const UNRANKED = "unranked";
+
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	// username to search for
 	let username: string = req.query.username as string;
@@ -11,6 +14,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	let defaultUser: string = req.query.defaultuser as string;
 	// profile ID of a user, only used if username and defaultUser are empty
 	let profileID: string = req.query.profileid as string;
+	// search for ranked or unranked stats
+	let ranked: string = req.query.ranked as string;
+	if(stringIsNullOrEmpty(ranked)) {
+		ranked = "ranked";
+	}
 	// which API to get the information from: official (ageofempires.com), aoeiv(.net), or aoe4world(.com)
 	const modes = [OFFICIAL, AOEIV, AOE4WORLD];
 	let mode: string = req.query.mode as string;
@@ -42,7 +50,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 		} else {
 			currentMode = modes.pop();
 		}
-		let response = await getResult(currentMode, username, profileID);
+		let response = await getResult(currentMode, username, profileID, ranked);
 		console.log(response);
 		
 		if(!response) {
@@ -53,11 +61,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 				const json = await response.json();
 				console.log(json);
 
-				let player = parseResult(json, currentMode, username, profileID);
+				let player = parseResult(json, currentMode, username, profileID, ranked);
 				if(player) {
 					let winPercent = player.winPercent;
 					let streak = player.streak;
-					let responseString = player.name + " is currently rank " + player.rank + " with an ELO of " + player.rating + ". They are " + player.wins + "-" + player.losses + " (" + winPercent.toFixed() + "%).";
+					let responseString = player.name + " is " + (stringIsNullOrEmpty(player.rank_level) ? "" : player.rank_level + ", ") + "rank " + player.rank + " with an ELO of " + player.rating + ". They are " + player.wins + "-" + player.losses + " (" + winPercent.toFixed() + "%).";
 					if(streak < -1 || streak > 1) {
 						responseString += " They are on a " + Math.abs(streak) + " game " + ((streak > 0) ? "winning" : "losing") + " streak.";
 					}
@@ -89,20 +97,41 @@ function stringIsNullOrEmpty(str) {
 	return !str || str.trim().length <= 0;
 }
 
-async function getResult(mode, username, profileID) {
+function capitalizeWord(str) {
+	if(!str || str.trim().length <= 0) {
+		return "";
+	}
+	return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
+
+async function getResult(mode, username, profileID, ranked) {
 	let url;
 	let response;
 	if(mode == OFFICIAL) {
-		url = "https://api.ageofempires.com/api/ageiv/Leaderboard";
-		let data = `{
-		  "region": "7",
-		  "versus": "players",
-		  "matchType": "unranked",
-		  "teamSize": "1v1",
-		  "searchPlayer": "${username}",
-		  "page": 1,
-		  "count": 1
-		}`;
+		let data;
+		if(ranked == RANKED) {
+			url = "https://api.ageofempires.com/api/ageiv/EventLeaderboard";
+			data = `{
+				"region": 7,
+				"versus": "players",
+				"matchType": 1,
+				"teamSize": "1v1",
+				"searchPlayer": "${username}",
+				"page": 1,
+				"count": 1
+			}`;
+		} else {
+			url = "https://api.ageofempires.com/api/ageiv/Leaderboard";
+			data = `{
+			  "region": "7",
+			  "versus": "players",
+			  "matchType": "unranked",
+			  "teamSize": "1v1",
+			  "searchPlayer": "${username}",
+			  "page": 1,
+			  "count": 1
+			}`;
+		}
 		response = await fetch(url, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -125,7 +154,11 @@ async function getResult(mode, username, profileID) {
 	}
 	if(mode == AOE4WORLD) {
 		if(!stringIsNullOrEmpty(username)) {
-			url = "https://aoe4world.com/api/v0/leaderboards/qm_1v1?query=" + encodeURIComponent(username);
+			if(ranked == RANKED) {
+				url = "https://aoe4world.com/api/v0/leaderboards/rm_1v1?query=" + encodeURIComponent(username);
+			} else {
+				url = "https://aoe4world.com/api/v0/leaderboards/qm_1v1?query=" + encodeURIComponent(username);
+			}
 		} else if(!stringIsNullOrEmpty(profileID)) {
 			url = "https://aoe4world.com/api/v0/players/" + encodeURIComponent(profileID);
 		}
@@ -139,7 +172,7 @@ async function getResult(mode, username, profileID) {
 	return response;
 }
 
-function parseResult(result, mode, username, profileID) {
+function parseResult(result, mode, username, profileID, ranked) {
 	if(mode == OFFICIAL) {
 		let searchField = "userName";
 		let searchTerm = username;
@@ -156,6 +189,7 @@ function parseResult(result, mode, username, profileID) {
 		return {
 			name: player.userName,
 			rank: player.rank,
+			rank_level: player.rankLevel,
 			rating: player.elo,
 			winPercent: player.winPercent,
 			streak: player.winStreak,
@@ -182,6 +216,7 @@ function parseResult(result, mode, username, profileID) {
 	if(mode == AOE4WORLD) {
 		let player;
 		let name;
+		let leagueString;
 		if(!stringIsNullOrEmpty(username)) {
 			if(result.players.length <= 0) {
 				return null;
@@ -189,13 +224,22 @@ function parseResult(result, mode, username, profileID) {
 			player = result.players[0];
 			name = player.name;
 		} else {
-			player = result.modes.qm_1v1;
+			if(ranked == RANKED) {
+				player = result.modes.rm_1v1;
+			} else {
+				player = result.modes.qm_1v1;
+			}
 			name = result.name;
 		}
 		let winPercent = player.win_rate;
+		if(ranked == RANKED) {
+			let league = player.rank_level.split("_");
+			leagueString = capitalizeWord(league[0]) + " " + (4 - parseInt(league[1]));
+		}
 		return {
 			name,
 			rank: player.rank,
+			rank_level: leagueString,
 			rating: player.rating,
 			winPercent,
 			streak: player.streak,

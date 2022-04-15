@@ -6,8 +6,9 @@ This is a very barebone next.js project (created from the next.js example) in wh
 
 I've added a middleware API that Nightbot (from Twitch chat) can call on to display Age of Empires 4 stats about a player.
 The AoE4 API operates on POST requests (since it was programmed for the search form on their website https://www.ageofempires.com/stats/ageiv/), but Nightbot can only do GET requests with its URLfetch command.
+Over time I've added support for the aoeiv.net API as well as aoe4world.com API. While they both use GET requests (so you could parse them directly with Nightbot commands), it's less convoluted to just use this API.
 
-You can call https://maz-aoe4rank.vercel.app/api/rank?username=[username] (replace [username] with a player name - make sure that it matches case and special chars exactly like it is in AoE4), it will print a message about the players rank, win-loss stats, and current streak.
+You can call https://maz-aoe4rank.vercel.app/api/rank?username=[username] (replace [username] with a player name - it can also be a partial name), it will print a message about the players rank, win-loss stats, and current streak.
 
 ### Nightbot commands
 
@@ -27,6 +28,10 @@ Or if you know the players profile ID, you can also use:
 ```!commands add !aoe4rank $(urlfetch https://maz-aoe4rank.vercel.app/api/rank?username=$(query)&profileid=6943917)```
 
 The search priority is: username > defaultuser > profileid. If all are empty, an error is shown.
+
+Other parameters:
+* mode: Allowed values: "official", "aoeiv" and "aoe4world". Allows you to specify which API you want to call from. If the specified API does not return a valid result, another API is used. Default order is "aoe4world", then "aoeiv", then "official".
+* ranked: Allowed values: "ranked" and "unranked". Allows you to specify whether to search for ranked stats or unranked. Default value is "ranked".
 
 ## Building & Deployment
 
