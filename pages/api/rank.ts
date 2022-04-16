@@ -228,7 +228,7 @@ function parseResult(result, mode, username, profileID, ranked) {
 			if(ranked == RANKED) {
 				player = result.modes.rm_1v1;
 			} else {
-				player = result.modes.qm_1v1;
+				player = result.modes.rm_1v1;
 			}
 			name = result.name;
 		}
