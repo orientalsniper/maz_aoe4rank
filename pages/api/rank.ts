@@ -65,7 +65,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 				if(player) {
 					let winPercent = player.winPercent;
 					let streak = player.streak;
-					let responseString = player.name + " is " + (stringIsNullOrEmpty(player.rank_level) ? "" : player.rank_level + " - ") + "Rank #" + player.rank + " (ELO-" + player.rating + ") - W/L " + player.wins + "-" + player.losses + " (" + winPercent.toFixed() + "%).";
+					let responseString = player.name + " is " + league + (stringIsNullOrEmpty(player.rank_level) ? "" : player.rank_level + " - ") + "Rank #" + player.rank + " (ELO-" + player.rating + ") - W/L " + player.wins + "-" + player.losses + " (" + winPercent.toFixed() + "%).";
 					if(streak < -1 || streak > 1) {
 						responseString += " They are on a " + Math.abs(streak) + " game " + ((streak > 0) ? "winning" : "losing") + " streak.";
 					}
