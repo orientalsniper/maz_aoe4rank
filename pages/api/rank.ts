@@ -69,7 +69,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 					if(streak < -1 || streak > 1) {
 						responseString += " They are on a " + Math.abs(streak) + " game " + ((streak > 0) ? "winning" : "losing") + " streak.";
 					}
-					responseString += " " + (stringIsNullOrEmpty(player.rank_level) ? "" : player.rank_level + "");
+					responseString += " " + (stringIsNullOrEmpty(player.site_url) ? "" : player.site_url + "");
 					responseString += " " + player.site_url;
 					hasResult = true;
 					res.status(200).send(responseString);
