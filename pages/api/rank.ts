@@ -157,8 +157,6 @@ async function getResult(mode, username, profileID, ranked) {
 		if(!stringIsNullOrEmpty(username)) {
 			if(ranked == RANKED) {
 				url = "https://aoe4world.com/api/v0/leaderboards/rm_1v1?query=" + encodeURIComponent(username);
-			} else {
-				url = "https://aoe4world.com/api/v0/leaderboards/qm_1v1?query=" + encodeURIComponent(username);
 			}
 		} else if(!stringIsNullOrEmpty(profileID)) {
 			url = "https://aoe4world.com/api/v0/players/" + encodeURIComponent(profileID);
