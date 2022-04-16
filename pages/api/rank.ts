@@ -235,6 +235,7 @@ function parseResult(result, mode, username, profileID, ranked) {
 		let winPercent = player.win_rate;
 		if(ranked == RANKED) {
 			let league = player.rank_level;
+			leagueString = league;
 		}
 		return {
 			name,
