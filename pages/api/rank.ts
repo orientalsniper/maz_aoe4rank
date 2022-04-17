@@ -5,7 +5,7 @@ const AOEIV = "aoeiv";
 const AOE4WORLD = "aoe4world";
 
 const RANKED = "ranked";
-const UNRANKED = "ranked";
+const UNRANKED = "unranked";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	// username to search for
