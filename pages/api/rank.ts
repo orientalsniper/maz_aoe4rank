@@ -158,7 +158,7 @@ async function getResult(mode, username, profileID, ranked) {
 			if(ranked == RANKED) {
 				url = "https://aoe4world.com/api/v0/leaderboards/rm_1v1?query=" + encodeURIComponent(username);
 			} else {
-				url = "https://aoe4world.com/api/v0/leaderboards/rm_1v1?query=" + encodeURIComponent(username);
+				url = "https://aoe4world.com/api/v0/leaderboards/qm_1v1?query=" + encodeURIComponent(username);
 			}
 		} else if(!stringIsNullOrEmpty(profileID)) {
 			url = "https://aoe4world.com/api/v0/players/" + encodeURIComponent(profileID);
@@ -228,7 +228,7 @@ function parseResult(result, mode, username, profileID, ranked) {
 			if(ranked == RANKED) {
 				player = result.modes.rm_1v1;
 			} else {
-				player = result.modes.rm_1v1;
+				player = result.modes.qm_1v1;
 			}
 			name = result.name;
 		}
